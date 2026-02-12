@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PREMI IL PULSANTE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #ff0080, #ff8c00, #40e0d0, #ff00ff);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .center {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .particle {
+            position: absolute;
+            font-size: 60px;
+            pointer-events: none;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+        }
+
+        .button-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+        }
+
+        .red-button {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #ff3333, #cc0000);
+            border: 8px solid rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            box-shadow: 
+                0 0 40px rgba(255, 0, 0, 1),
+                0 0 80px rgba(255, 100, 0, 0.8),
+                inset 0 0 40px rgba(255, 255, 255, 0.5),
+                0 15px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.1s ease;
+            font-size: 0;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 
+                    0 0 40px rgba(255, 0, 0, 1),
+                    0 0 80px rgba(255, 100, 0, 0.8),
+                    inset 0 0 40px rgba(255, 255, 255, 0.5),
+                    0 15px 30px rgba(0, 0, 0, 0.3);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 
+                    0 0 60px rgba(255, 0, 0, 1),
+                    0 0 120px rgba(255, 100, 0, 1),
+                    inset 0 0 60px rgba(255, 255, 255, 0.8),
+                    0 20px 50px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        .red-button:hover {
+            transform: scale(1.15);
+            box-shadow: 
+                0 0 80px rgba(255, 0, 0, 1),
+                0 0 150px rgba(255, 100, 0, 1),
+                inset 0 0 60px rgba(255, 255, 255, 0.9),
+                0 25px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .red-button:active {
+            transform: scale(0.95);
+            box-shadow: 
+                0 0 30px rgba(255, 0, 0, 0.8),
+                0 0 60px rgba(255, 100, 0, 0.6),
+                inset 0 0 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .red-button:disabled {
+            opacity: 0.8;
+            cursor: not-allowed;
+        }
+
+        .status {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            z-index: 50;
+            pointer-events: none;
+            min-height: 30px;
+        }
+
+        .aura {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 0, 0, 0.5);
+            animation: expandAura 2s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        @keyframes expandAura {
+            0%, 100% {
+                width: 350px;
+                height: 350px;
+                opacity: 0.8;
+            }
+            50% {
+                width: 450px;
+                height: 450px;
+                opacity: 0.3;
+            }
+        }
+
+        .glow-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 100, 0.6);
+            animation: rotateRing 4s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotateRing {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="center">
+        <div class="particles" id="particles"></div>
+        
+        <div class="glow-ring" style="width: 400px; height: 400px;"></div>
+        <div class="glow-ring" style="width: 500px; height: 500px; animation-duration: 6s; animation-direction: reverse;"></div>
+        <div class="aura"></div>
+
+        <div class="button-wrapper">
+            <button class="red-button" id="mainButton"></button>
+            <div class="status" id="status"></div>
+        </div>
+    </div>
+
+    <script>
+        const button = document.getElementById('mainButton');
+        const particles = document.getElementById('particles');
+        const status = document.getElementById('status');
+        const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+        // Array di simboli che puntano al pulsante
+        const symbols = [
+            '👉', '👈', '☝️', '👇',
+            '➡️', '⬅️', '⬆️', '⬇️',
+            '↗️', '↘️', '↙️', '↖️',
+            '🔥', '⚡', '💥', '✨',
+            '⭐', '💫', '🌟', '💢',
+            '👀', '🎯', '💘', '💗',
+            '🌀', '🔴', '🎪', '🎨',
+            '🤸', '🙌', '👏', '🤚',
+            '🔱', '🎯', '⚠️', '❗'
+        ];
+
+        // Crea 100 particelle che puntano al pulsante
+        function createParticles() {
+            for (let i = 0; i < 100; i++) {
+                const angle = (Math.random() * Math.PI * 2);
+                const distance = 250 + Math.random() * 400;
+                const startX = center.x + Math.cos(angle) * distance;
+                const startY = center.y + Math.sin(angle) * distance;
+
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                particle.style.left = startX + 'px';
+                particle.style.top = startY + 'px';
+                particle.style.transform = `translate(-50%, -50%)`;
+
+                particles.appendChild(particle);
+
+                // Anima il movimento verso il centro
+                animateTowardCenter(particle, startX, startY);
+            }
+        }
+
+        // Anima ogni particella verso il pulsante
+        function animateTowardCenter(particle, startX, startY) {
+            const duration = 2000 + Math.random() * 1500;
+            const startTime = Date.now() + Math.random() * 1000;
+            
+            const animate = () => {
+                const elapsed = Date.now() - startTime;
+                const progress = (elapsed % duration) / duration;
+
+                // Movimento verso il centro
+                const currentX = startX + (center.x - startX) * progress;
+                const currentY = startY + (center.y - startY) * progress;
+                
+                // Opacity pulsing
+                const opacity = 0.5 + Math.sin(progress * Math.PI * 2) * 0.5;
+                
+                particle.style.left = currentX + 'px';
+                particle.style.top = currentY + 'px';
+                particle.style.opacity = opacity;
+
+                requestAnimationFrame(animate);
+            };
+
+            animate();
+        }
+
+        // Quando clicchi il pulsante
+        button.addEventListener('click', function() {
+            button.disabled = true;
+            status.textContent = '🔊';
+
+            const audio = new Audio('Video Project 1.m4a');
+            audio.play();
+
+            audio.onended = function() {
+                button.disabled = false;
+                status.textContent = '';
+            };
+
+            audio.onerror = function() {
+                button.disabled = false;
+                status.textContent = '';
+            };
+
+            createClickEffect();
+        });
+
+        // Effetto particelle al click
+        function createClickEffect() {
+            for (let i = 0; i < 20; i++) {
+                const angle = (i / 20) * Math.PI * 2;
+                const particle = document.createElement('div');
+                particle.textContent = '✨';
+                particle.style.position = 'fixed';
+                particle.style.left = center.x + 'px';
+                particle.style.top = center.y + 'px';
+                particle.style.fontSize = '40px';
+                particle.style.pointerEvents = 'none';
+                particle.style.zIndex = '200';
+                document.body.appendChild(particle);
+
+                let x = center.x;
+                let y = center.y;
+                const vx = Math.cos(angle) * 8;
+                const vy = Math.sin(angle) * 8;
+                let opacity = 1;
+
+                const animate = () => {
+                    x += vx;
+                    y += vy;
+                    opacity -= 0.05;
+                    particle.style.left = x + 'px';
+                    particle.style.top = y + 'px';
+                    particle.style.opacity = opacity;
+
+                    if (opacity > 0) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        particle.remove();
+                    }
+                };
+
+                animate();
+            }
+        }
+
+        // Effetto hover aggiunti
+        button.addEventListener('mouseenter', () => {
+            // Aggiungi particelle extra in orbita quando il mouse entra
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 200;
+                    const x = center.x + Math.cos(angle) * distance;
+                    const y = center.y + Math.sin(angle) * distance;
+
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.textContent = '💥';
+                    particle.style.left = x + 'px';
+                    particle.style.top = y + 'px';
+                    particle.style.fontSize = '50px';
+                    particle.style.transform = `translate(-50%, -50%)`;
+                    particle.style.animationDuration = '1s';
+                    particle.style.opacity = '0.7';
+
+                    particles.appendChild(particle);
+
+                    setTimeout(() => particle.remove(), 3000);
+                }, i * 50);
+            }
+        });
+
+        // Inizializza le particelle
+        createParticles();
+    </script>
+</body>
+</html>
